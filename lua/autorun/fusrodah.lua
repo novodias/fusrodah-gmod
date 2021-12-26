@@ -1,7 +1,12 @@
 if SERVER then
+    CreateConVar("fusrodah_timer", 10, FCVAR_NONE, "Timer for each fus ro dah")
     CreateConVar("fusrodah_ragdoll_mass", 30, FCVAR_NONE, "Ragdoll mass")
-    CreateConVar("fusrodah_distance", 150, FCVAR_NONE, "Entities that will be affected by the distance")
-    CreateConVar("fusrodah_angle", 45, FCVAR_NONE, "Fus Ro Dah angle", 45, 90)
+    CreateConVar("fusrodah_distance", 150, FCVAR_NONE, "Entities that will be affected by the set distance")
+    CreateConVar("fusrodah_angle", 45, FCVAR_NONE, "Fus ro dah angle", 45, 90)
+end
+
+function Timer()
+    timer.Create( "FusrodahTimer", GetConVar("fusrodah_timer"):GetInt(), 1, function() end)
 end
 
 function playSound( ply )
@@ -17,6 +22,8 @@ function fusCone( ply )
     )
 
     playSound( ply )
+
+    if CLIENT then return end
 
     for id, tr in pairs(entities) do
 
@@ -118,10 +125,22 @@ function fusCone( ply )
     end
 end
 
-hook.Add( "KeyPress", "FusrodahKey", function( ply, key)
+function PlayerKeyPressed( ply, key )
     if ( key == IN_ZOOM ) then
         fusCone( ply )
     end
+end
+
+hook.Add( "KeyPress", "FusrodahKey", function( ply, key )
+    if timer.Exists("FusrodahTimer") then return end
+
+    if not timer.Exists("FusrodahTimer") then
+        PlayerKeyPressed( ply, key )
+        Timer()
+    end
 end)
 
-concommand.Add("fusrodah", fusCone)
+if SERVER then
+    -- Server-side to prevent abuse of the command
+    concommand.Add("fusrodah", fusCone)
+end
