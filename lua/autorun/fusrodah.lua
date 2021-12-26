@@ -1,9 +1,7 @@
-if SERVER then
-    CreateConVar("fusrodah_timer", 10, FCVAR_NONE, "Timer for each fus ro dah")
-    CreateConVar("fusrodah_ragdoll_mass", 30, FCVAR_NONE, "Ragdoll mass")
-    CreateConVar("fusrodah_distance", 150, FCVAR_NONE, "Entities that will be affected by the set distance")
-    CreateConVar("fusrodah_angle", 45, FCVAR_NONE, "Fus ro dah angle", 45, 90)
-end
+CreateConVar("fusrodah_timer", 10, FCVAR_NONE, "Timer for each fus ro dah")
+CreateConVar("fusrodah_ragdoll_mass", 30, FCVAR_NONE, "Ragdoll mass")
+CreateConVar("fusrodah_distance", 150, FCVAR_NONE, "Entities that will be affected by the set distance")
+CreateConVar("fusrodah_angle", 45, FCVAR_NONE, "Fus ro dah angle", 45, 90)
 
 function Timer()
     timer.Create( "FusrodahTimer", GetConVar("fusrodah_timer"):GetInt(), 1, function() end)
@@ -14,6 +12,7 @@ function playSound( ply )
 end
 
 function fusCone( ply )
+
     local entities = ents.FindInCone(
         ply:EyePos(),
         ply:GetAimVector(),
